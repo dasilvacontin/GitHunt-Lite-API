@@ -1,26 +1,26 @@
 const repos = [
   {
     repository_name: 'apollostack/apollo-client',
-    posted_by: 'stubailo',
+    posted_by: 'stubailo'
   },
   {
     repository_name: 'apollostack/apollo-server',
-    posted_by: 'helfer',
+    posted_by: 'helfer'
   },
   {
     repository_name: 'meteor/meteor',
-    posted_by: 'tmeasday',
+    posted_by: 'tmeasday'
   },
   {
     repository_name: 'twbs/bootstrap',
-    posted_by: 'Slava',
-  },
-];
+    posted_by: 'Slava'
+  }
+]
 
-export function seed(knex, Promise) {
+export function seed (knex, Promise) {
   return Promise.all([
     knex('entries').del(),
-    knex('comments').del(),
+    knex('comments').del()
   ])
 
   // Insert some entries for the repositories
@@ -29,8 +29,8 @@ export function seed(knex, Promise) {
       return knex('entries').insert({
         created_at: Date.now() - i * 10000,
         repository_name,
-        posted_by,
-      });
-    }));
-  });
+        posted_by
+      })
+    }))
+  })
 }

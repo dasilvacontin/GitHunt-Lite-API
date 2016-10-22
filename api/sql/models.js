@@ -1,57 +1,57 @@
-import knex from './connector';
+import knex from './connector'
 
 export class Comments {
-  getCommentById(id) {
+  getCommentById (id) {
     const query = knex('comments')
-      .where({ id });
-    return query.then(([row]) => row);
+      .where({ id })
+    return query.then(([row]) => row)
   }
 
-  getCommentsByRepoName(name) {
-    const query = knex('comments')
-      .where({ repository_name: name })
-      .orderBy('created_at', 'desc');
-    return query.then(rows => (rows || []));
-  }
-
-  getCommentsCount(name) {
+  getCommentsByRepoName (name) {
     const query = knex('comments')
       .where({ repository_name: name })
-      .count();
-    return query.then(rows => rows.map(row => (row['count(*)'] || '0')));
+      .orderBy('created_at', 'desc')
+    return query.then(rows => (rows || []))
   }
 
-  submitComment(repoFullName, username, content) {
+  getCommentsCount (name) {
+    const query = knex('comments')
+      .where({ repository_name: name })
+      .count()
+    return query.then(rows => rows.map(row => (row['count(*)'] || '0')))
+  }
+
+  submitComment (repoFullName, username, content) {
     return knex.transaction(trx => trx('comments')
       .insert({
         content,
         created_at: Date.now(),
         repository_name: repoFullName,
-        posted_by: username,
-      }));
+        posted_by: username
+      }))
   }
 }
 export class Entries {
-  getForFeed() {
+  getForFeed () {
     const query = knex('entries')
 
-    return query;
+    return query
   }
 
-  getByRepoFullName(name) {
+  getByRepoFullName (name) {
     // No need to batch
     const query = knex('entries')
       .where({
-        repository_name: name,
+        repository_name: name
       })
-      .first();
+      .first()
 
-    return query;
+    return query
   }
 
-  submitRepository(repoFullName, username) {
-    const rateLimitMs = 60 * 60 * 1000;
-    const rateLimitThresh = 3;
+  submitRepository (repoFullName, username) {
+    const rateLimitMs = 60 * 60 * 1000
+    const rateLimitThresh = 3
 
     // Rate limiting logic
     return knex.transaction(trx => trx('entries')
@@ -61,18 +61,18 @@ export class Entries {
       .then((obj) => {
         // If the user has already submitted too many times, we don't
         // post the repo.
-        const postCount = obj[0]['count(*)'];
+        const postCount = obj[0]['count(*)']
         if (postCount > rateLimitThresh) {
-          throw new Error('Too many repos submitted in the last hour!');
+          throw new Error('Too many repos submitted in the last hour!')
         } else {
           return trx('entries')
             .insert({
               created_at: Date.now(),
               updated_at: Date.now(),
               repository_name: repoFullName,
-              posted_by: username,
-            });
+              posted_by: username
+            })
         }
-      }));
+      }))
   }
 }

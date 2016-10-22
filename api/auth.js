@@ -1,19 +1,19 @@
 export class Auth {
-  constructor() {
-    this.user = undefined; 
+  constructor () {
+    this.user = undefined
   }
 
-  getUser() {
-    return this.user;
+  getUser () {
+    return this.user
   }
 
-  login() {
+  login () {
     this.user = {
       login: 'kamil'
-    };
+    }
   }
 
-  logout() {
-    this.user = undefined;
+  logout () {
+    this.user = undefined
   }
 }

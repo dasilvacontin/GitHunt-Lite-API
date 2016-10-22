@@ -1,4 +1,4 @@
-import knex from 'knex';
-import { development } from '../../knexfile';
+import knex from 'knex'
+import { development } from '../../knexfile'
 
-export default knex(development);
+export default knex(development)
